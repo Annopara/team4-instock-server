@@ -4,11 +4,13 @@ require("dotenv").config();
 
 app.use(express.json());
 
-// app.route("/").get((_req, res) => {
-//   res.json("Testing Server");
-// }); // you can run it to test the server...
-
 const PORT = process.env.PORT || 8000;
+
+const inventoryRoute = require("./routes/inventory");
+const warehouseRoute = require("./routes/warehouse");
+
+app.use("/inventory", inventoryRoute);
+app.use("/warehouse", warehouseRoute);
 
 app.listen(PORT, () => {
   console.log(`running at http://localhost:${PORT}`);
