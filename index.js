@@ -10,7 +10,7 @@ const inventoryRoute = require("./routes/inventory");
 const warehouseRoute = require("./routes/warehouse");
 
 app.use("/inventory", inventoryRoute);
-app.use("/inventory", warehouseRoute);
+app.use("/warehouse", warehouseRoute);
 
 app.listen(PORT, () => {
   console.log(`running at http://localhost:${PORT}`);

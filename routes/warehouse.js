@@ -1,12 +1,15 @@
 const router = require("express").Router();
 
+const warehouseController = require("../controllers/inventory-controller");
+
+router.route("/").get(warehouseController.index).post(warehouseController.add);
+
 router
-  .route("/")
-  .get((_req, res) => {
-    res.status(200).json("Testing warehouse route");
-  })
-  .post((_req, res) => {
-    res.status(201).json("");
-  });
+  .route("/:id")
+  .get(warehouseController.findOne)
+  .patch(warehouseController.update)
+  .delete(warehouseController.remove);
+
+router.route("/:id/posts").get(warehouseController.posts);
 
 module.exports = router;
