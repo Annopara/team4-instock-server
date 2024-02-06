@@ -2,7 +2,7 @@ const knex = require("knex")(require("../knexfile"));
 
 const index = async (_req, res) => {
   try {
-    const data = await knex("");
+    const data = await knex("inventories");
     res.status(200).json(data);
   } catch (err) {
     res.status(400).send(`Error retrieving data: ${err}`);
@@ -11,7 +11,7 @@ const index = async (_req, res) => {
 
 const findOne = async (req, res) => {
   try {
-    const usersFound = await knex("").where({ id: req.params.id });
+    const usersFound = await knex("inventories").where({ id: req.params.id });
 
     if (usersFound.length === 0) {
       return res.status(404).json({
@@ -30,7 +30,9 @@ const findOne = async (req, res) => {
 
 const posts = async (req, res) => {
   try {
-    const posts = await knex("").join().where({ user_id: req.params.id });
+    const posts = await knex("inventories")
+      .join("post", "post.user_id", "user.id")
+      .where({ user_id: req.params.id });
 
     res.json(posts);
   } catch (error) {
@@ -48,10 +50,10 @@ const add = async (req, res) => {
   }
 
   try {
-    const result = await knex("").insert(req.body);
+    const result = await knex("inventories").insert(req.body);
 
     const newUserId = result[0];
-    const createdUser = await knex("").where({ id: newUserId });
+    const createdUser = await knex("inventories").where({ id: newUserId });
 
     res.status(201).json(createdUser);
   } catch (error) {
@@ -63,7 +65,7 @@ const add = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const rowsUpdated = await knex("")
+    const rowsUpdated = await knex("inventories")
       .where({ id: req.params.id })
       .update(req.body);
 
@@ -73,7 +75,7 @@ const update = async (req, res) => {
       });
     }
 
-    const updatedUser = await knex("").where({
+    const updatedUser = await knex("inventories").where({
       id: req.params.id,
     });
 
@@ -87,7 +89,9 @@ const update = async (req, res) => {
 
 const remove = async (req, res) => {
   try {
-    const rowsDeleted = await knex("").where({ id: req.params.id }).delete();
+    const rowsDeleted = await knex("inventories")
+      .where({ id: req.params.id })
+      .delete();
 
     if (rowsDeleted === 0) {
       return res
