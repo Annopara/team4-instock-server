@@ -31,7 +31,7 @@ const findOne = async (req, res) => {
 const posts = async (req, res) => {
   try {
     const posts = await knex("warehouses")
-      .join("post", "post.user_id", "user.id")
+      .join("inventories", "inventories.user_id", "warehouses.id")
       .where({ user_id: req.params.id });
 
     res.json(posts);
@@ -43,22 +43,9 @@ const posts = async (req, res) => {
 };
 
 const add = async (req, res) => {
-  if (!req.body.name || !req.body.email) {
+  {
     return res.status(400).json({
-      message: "Please provide name and email for the user in the request",
-    });
-  }
-
-  try {
-    const result = await knex("warehouses").insert(req.body);
-
-    const newUserId = result[0];
-    const createdUser = await knex("warehouses").where({ id: newUserId });
-
-    res.status(201).json(createdUser);
-  } catch (error) {
-    res.status(500).json({
-      message: `Unable to create new user: ${error}`,
+      message: "Required fields are missing in the request",
     });
   }
 };
