@@ -76,7 +76,24 @@ const add = async (req, res) => {
   }
 };
 
+// EDIT/PUT WAREHOUSE DATA
 const update = async (req, res) => {
+  const newWarehouseInfo = req.body;
+  // API validation of required fields
+  if (
+    !newWarehouseInfo.warehouse_name ||
+    !newWarehouseInfo.address ||
+    !newWarehouseInfo.city ||
+    !newWarehouseInfo.country ||
+    !newWarehouseInfo.contact_name ||
+    !newWarehouseInfo.contact_position ||
+    !newWarehouseInfo.contact_phone ||
+    !newWarehouseInfo.contact_email
+  ) {
+    return res.status(400).json({
+      message: "Required fields are missing in the request",
+    });
+  }
   try {
     const rowsUpdated = await knex("warehouses")
       .where({ id: req.params.id })
@@ -84,7 +101,7 @@ const update = async (req, res) => {
 
     if (rowsUpdated === 0) {
       return res.status(404).json({
-        message: `User with ID ${req.params.id} not found`,
+        message: `Warehouse with ID ${req.params.id} not found`,
       });
     }
 
@@ -117,6 +134,7 @@ const remove = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: `Unable to delete user: ${error}`,
+      it,
     });
   }
 };
