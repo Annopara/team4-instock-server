@@ -1,13 +1,19 @@
 const knex = require("knex")(require("../knexfile"));
 
+// CONTROLLER FOR GETTING ALL WAREHOUSE DATA
+
 const index = async (_req, res) => {
   try {
-    const data = await knex("warehouses");
-    res.status(200).json(data);
+    const warehouses = await knex("warehouses");
+    warehouses
+      ? res.status(200).json(warehouses)
+      : res.status(404).json({ message: "No warehouses found" });
   } catch (err) {
-    res.status(400).send(`Error retrieving data: ${err}`);
+    res.status(400).send(`Error retrieving warehouses: ${err}`);
   }
 };
+
+// CONTROLLER FOR GETTING A SINGLE WAREHOUSE
 
 const findOne = async (req, res) => {
   try {
@@ -28,21 +34,52 @@ const findOne = async (req, res) => {
   }
 };
 
+// CONTROLLER FOR POST/CREATE NEW INVENTORY ITEM ATTACHED TO PARTICULAR WAREHOUSE
+
 const posts = async (req, res) => {
   try {
-    const posts = await knex("warehouses")
-      .join("inventories", "inventories.user_id", "warehouses.id")
-      .where({ user_id: req.params.id });
+    const { warehouse_id, item_name, description, category, status, quantity } =
+      req.body;
 
-    res.json(posts);
+    // API VALIDATION OF REQUIRED FIELDS
+
+    if (
+      !warehouse_id ||
+      !item_name ||
+      !description ||
+      !category ||
+      !status ||
+      !quantity
+    ) {
+      return res.status(400).json({ error: "All fields are required." });
+    }
+
+    // API VALIDATION OF QUANTITY FIELD
+
+    if (!validator.isNumeric(quantity)) {
+      return res
+        .status(400)
+        .json({ error: "Quantity must be a valid number." });
+    }
+
+    // STORE ID OF WAREHOUSE INVENTORY IS ATTACHED TO
+    const warehouseId = req.params.id;
+
+    //
+    const inventoryData = await knex("inventory").insert(inventory).where({
+      warehouse_id: warehouseId,
+    });
+
+    res.status(201).json(inventoryData);
   } catch (error) {
-    res.status(500).json({
-      message: `Unable to retrieve posts for user with ID ${req.params.id}: ${error}`,
+    res.status(400).json({
+      message: `Unable to retrieve inventory data for warehouse with ID ${req.params.id}`,
     });
   }
 };
 
-// ADDS NEW FORM TO WAREHOUSE DATA
+// ADDS NEW WAREHOUSE
+
 const add = async (req, res) => {
   const newWarehouseInfo = req.body;
 
@@ -71,12 +108,11 @@ const add = async (req, res) => {
     res.status(201).json(createdUser);
   } catch (error) {
     res.status(500).json({
-      message: `Unable to create new user: ${error}`,
+      message: `Unable to create new warehouse: ${error}`,
     });
   }
 };
 
-// EDIT/PUT WAREHOUSE DATA
 const update = async (req, res) => {
   const newWarehouseInfo = req.body;
   // API validation of required fields
@@ -117,6 +153,8 @@ const update = async (req, res) => {
   }
 };
 
+// CONTROLLER FOR DELETING WAREHOUSE DATA
+
 const remove = async (req, res) => {
   try {
     const rowsDeleted = await knex("warehouses")
@@ -126,15 +164,12 @@ const remove = async (req, res) => {
     if (rowsDeleted === 0) {
       return res
         .status(404)
-        .json({ message: `User with ID ${req.params.id} not found` });
+        .json({ message: `Warehouse with ID ${req.params.id} not found` });
     }
-
-    // No Content response
     res.sendStatus(204);
   } catch (error) {
     res.status(500).json({
-      message: `Unable to delete user: ${error}`,
-      it,
+      message: `Unable to delete warehouse: ${error}`,
     });
   }
 };
