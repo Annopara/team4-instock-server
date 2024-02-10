@@ -1,16 +1,18 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 require("dotenv").config();
 
-app.use(express.json());
+const { PORT } = process.env || 8000;
 
-const PORT = process.env.PORT || 8000;
+app.use(cors());
+app.use(express.json());
 
 const inventoryRoute = require("./routes/inventory");
 const warehouseRoute = require("./routes/warehouse");
 
-app.use("/inventory", inventoryRoute);
-app.use("/warehouse", warehouseRoute);
+app.use("/inventories", inventoryRoute);
+app.use("/warehouses", warehouseRoute);
 
 app.listen(PORT, () => {
   console.log(`running at http://localhost:${PORT}`);
