@@ -31,7 +31,7 @@ const findOne = async (req, res) => {
 const posts = async (req, res) => {
   try {
     const posts = await knex("warehouses")
-      .join("post", "post.user_id", "user.id")
+      .join("inventories", "inventories.user_id", "warehouses.id")
       .where({ user_id: req.params.id });
 
     res.json(posts);
