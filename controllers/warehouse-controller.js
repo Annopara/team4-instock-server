@@ -42,15 +42,28 @@ const posts = async (req, res) => {
   }
 };
 
+// ADDS NEW FORM TO WAREHOUSE DATA
 const add = async (req, res) => {
-  if (!req.body.name || !req.body.email) {
+  const newWarehouseInfo = req.body;
+
+  // API validation of required fields
+  if (
+    !newWarehouseInfo.warehouse_name ||
+    !newWarehouseInfo.address ||
+    !newWarehouseInfo.city ||
+    !newWarehouseInfo.country ||
+    !newWarehouseInfo.contact_name ||
+    !newWarehouseInfo.contact_position ||
+    !newWarehouseInfo.contact_phone ||
+    !newWarehouseInfo.contact_email
+  ) {
     return res.status(400).json({
-      message: "Please provide name and email for the user in the request",
+      message: "Required fields are missing in the request",
     });
   }
 
   try {
-    const result = await knex("warehouses").insert(req.body);
+    const result = await knex("warehouses").insert(newWarehouseInfo);
 
     const newUserId = result[0];
     const createdUser = await knex("warehouses").where({ id: newUserId });
