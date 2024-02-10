@@ -42,10 +42,36 @@ const posts = async (req, res) => {
   }
 };
 
+// ADDS NEW FORM TO WAREHOUSE DATA
 const add = async (req, res) => {
-  {
+  const newWarehouseInfo = req.body;
+
+  // API validation of required fields
+  if (
+    !newWarehouseInfo.warehouse_name ||
+    !newWarehouseInfo.address ||
+    !newWarehouseInfo.city ||
+    !newWarehouseInfo.country ||
+    !newWarehouseInfo.contact_name ||
+    !newWarehouseInfo.contact_position ||
+    !newWarehouseInfo.contact_phone ||
+    !newWarehouseInfo.contact_email
+  ) {
     return res.status(400).json({
       message: "Required fields are missing in the request",
+    });
+  }
+
+  try {
+    const result = await knex("warehouses").insert(newWarehouseInfo);
+
+    const newUserId = result[0];
+    const createdUser = await knex("warehouses").where({ id: newUserId });
+
+    res.status(201).json(createdUser);
+  } catch (error) {
+    res.status(500).json({
+      message: `Unable to create new user: ${error}`,
     });
   }
 };
