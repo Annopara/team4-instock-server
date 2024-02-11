@@ -11,7 +11,7 @@ app.use(express.json());
 const inventoryRoute = require("./routes/inventory");
 const warehouseRoute = require("./routes/warehouse");
 
-app.use("/api/warehouses", inventoryRoute);
+app.use("/api/inventories", inventoryRoute);
 app.use("/api/warehouses", warehouseRoute);
 
 app.listen(PORT, () => {
