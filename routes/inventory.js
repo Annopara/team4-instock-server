@@ -6,6 +6,10 @@ router
   .route("/api/inventories")
   .get(inventoryController.index)
   .post(inventoryController.add);
+router
+  .route("/api")
+  .get(inventoryController.index)
+  .post(inventoryController.add);
 
 router
   .route("/:id")
