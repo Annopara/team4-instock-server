@@ -89,21 +89,21 @@ const update = async (req, res) => {
 
 const remove = async (req, res) => {
   try {
-    const rowsDeleted = await knex("inventories")
+    const deleteInventory = await knex("inventories")
       .where({ id: req.params.id })
       .delete();
 
-    if (rowsDeleted === 0) {
+    if (deleteInventory === 0) {
       return res
         .status(404)
-        .json({ message: `User with ID ${req.params.id} not found` });
+        .json({ message: `Inventory with ID ${req.params.id} not found` });
     }
 
     // No Content response
     res.sendStatus(204);
   } catch (error) {
     res.status(500).json({
-      message: `Unable to delete user: ${error}`,
+      message: `Unable to delete Inventory: ${error}`,
     });
   }
 };
