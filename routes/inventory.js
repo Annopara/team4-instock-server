@@ -10,7 +10,6 @@ router
   .patch(inventoryController.update)
   .delete(inventoryController.remove);
 
-// router.route("/:id/posts").get(inventoryController.posts);
-// // not sure if this is needed - no posts for inventory
-
+router.route("/:id/posts").get(inventoryController.posts);
+//change posts to inventories or whatever you need it to be
 module.exports = router;
