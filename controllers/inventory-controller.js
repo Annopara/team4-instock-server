@@ -1,14 +1,5 @@
 const knex = require("knex")(require("../knexfile"));
 
-const index = async (_req, res) => {
-  try {
-    const data = await knex("inventories");
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(400).send(`Error retrieving data: ${err}`);
-  }
-};
-
 const findOne = async (req, res) => {
   try {
     const usersFound = await knex("inventories").where({ id: req.params.id });
@@ -25,6 +16,15 @@ const findOne = async (req, res) => {
     res.status(500).json({
       message: `Unable to retrieve user data for user with ID ${req.params.id}`,
     });
+  }
+};
+
+const index = async (_req, res) => {
+  try {
+    const data = await knex("inventories");
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(400).send(`Error retrieving data: ${err}`);
   }
 };
 
