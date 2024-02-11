@@ -141,11 +141,13 @@ const update = async (req, res) => {
       });
     }
 
-    const updatedUser = await knex("warehouses").where({
-      id: req.params.id,
-    });
+    const updatedWarehouse = await knex("warehouses")
+      .where({
+        id: req.params.id,
+      })
+      .first();
 
-    res.json(updatedUser[0]);
+    res.json(updatedWarehouse[0]);
   } catch (error) {
     res.status(500).json({
       message: `Unable to update user with ID ${req.params.id}: ${error}`,
