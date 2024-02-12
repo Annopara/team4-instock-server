@@ -1,20 +1,27 @@
 const router = require("express").Router();
-
 const warehouseController = require("../controllers/warehouse-controller");
+const knex = require('knex')(/* your db config */);
 
-// updated route to include /api/warehouses
+// Existing routes
 router.route("/").get(warehouseController.index).post(warehouseController.add);
+router.route("/:id").get(warehouseController.findOne).put(warehouseController.update).delete(warehouseController.remove);
 
-// updated route to include /api/warehouses
-router
-  .route("/:id")
-  .get(warehouseController.findOne)
-  .put(warehouseController.update)
-  .delete(warehouseController.remove);
+// New route for getting inventories of a specific warehouse
+router.get('/:id/inventories', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const inventories = await knex('inventories').where({ warehouseId: id });
 
-// router
-//   .route("/:id/posts")
-//   .get(warehouseController.posts);
-// not sure if this is necessary - we don't have posts for warehouses
+        if (inventories.length === 0) {
+            return res.status(404).json({ error: 'Warehouse ID not found' });
+        }
+
+        return res.status(200).json(inventories);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred while fetching data' });
+    }
+});
 
 module.exports = router;
+
