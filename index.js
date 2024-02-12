@@ -1,14 +1,18 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 require("dotenv").config();
 
+const { PORT } = process.env || 8000;
+
+app.use(cors());
 app.use(express.json());
 
-// app.route("/").get((_req, res) => {
-//   res.json("Testing Server");
-// }); // you can run it to test the server...
+const inventoryRoute = require("./routes/inventory");
+const warehouseRoute = require("./routes/warehouse");
 
-const PORT = process.env.PORT || 8000;
+app.use("/api/inventories", inventoryRoute);
+app.use("/api/warehouses", warehouseRoute);
 
 app.listen(PORT, () => {
   console.log(`running at http://localhost:${PORT}`);
