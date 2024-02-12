@@ -43,22 +43,28 @@ const posts = async (req, res) => {
 };
 
 const add = async (req, res) => {
-  if (!req.body.name || !req.body.email) {
-    return res.status(400).json({
-      message: "Please provide name and email for the user in the request",
-    });
-  }
-
   try {
-    const result = await knex("inventories").insert(req.body);
+    const { warehouse_id, item_name, description, category, status, quantity } =
+      req.body;
 
-    const newUserId = result[0];
-    const createdUser = await knex("inventories").where({ id: newUserId });
-
-    res.status(201).json(createdUser);
+    if (
+      !warehouse_id ||
+      !item_name ||
+      !description ||
+      !category ||
+      !status ||
+      !quantity
+    ) {
+      return res.status(400).json({ error: "All fields are required." });
+    }
+    if (!validator.isNumeric(quantity)) {
+      return res.status(400).json({ error: "Quantity must be a number." });
+    }
+    const newInventory = await knex("inventories").insert(req.body);
+    res.status(201).json(newInventory);
   } catch (error) {
-    res.status(500).json({
-      message: `Unable to create new user: ${error}`,
+    res.status(400).json({
+      message: `Unable to add inventory item for warehouse with ID ${req.params.id}: ${error}`,
     });
   }
 };

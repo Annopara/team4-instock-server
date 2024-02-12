@@ -8,8 +8,8 @@ router
   .route("/:id")
   .get(inventoryController.findOne)
   .patch(inventoryController.update)
-  .delete(inventoryController.remove);
+  .delete(inventoryController.remove)
 
 router.route("/:id/posts").get(inventoryController.posts);
-//change posts to inventories or whatever you need it to be
+
 module.exports = router;
