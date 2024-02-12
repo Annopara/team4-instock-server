@@ -41,15 +41,6 @@ const posts = async (req, res) => {
     });
   }
 };
-const knex = require("knex")(require("../knexfile.js"));
-const index = async (_req, res) => {
-  try {
-    const data = await knex("inventories");
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(400).send(`Error retrieving data: ${err}`);
-  }
-};
 
 const add = async (req, res) => {
   try {
@@ -78,13 +69,11 @@ const add = async (req, res) => {
   }
 };
 
-
 const update = async (req, res) => {
   try {
     const rowsUpdated = await knex("inventories")
       .where({ id: req.params.id })
       .update(req.body);
-
 
     if (rowsUpdated === 0) {
       return res.status(404).json({
@@ -92,11 +81,9 @@ const update = async (req, res) => {
       });
     }
 
-
     const updatedUser = await knex("inventories").where({
       id: req.params.id,
     });
-
 
     res.json(updatedUser[0]);
   } catch (error) {
@@ -106,18 +93,19 @@ const update = async (req, res) => {
   }
 };
 
-
 const remove = async (req, res) => {
   try {
     const deleteInventory = await knex("inventories")
       .where({ id: req.params.id })
       .delete();
+
     if (deleteInventory === 0) {
       return res
         .status(404)
         .json({ message: `Inventory with ID ${req.params.id} not found` });
     }
-    // No Content response
+
+    
     res.sendStatus(204);
   } catch (error) {
     res.status(500).json({
@@ -129,7 +117,8 @@ const remove = async (req, res) => {
 module.exports = {
   index,
   findOne,
-  add, 
+  posts,
+  add,
   update,
-  remove
-}
+  remove,
+};
