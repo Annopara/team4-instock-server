@@ -63,7 +63,7 @@ const add = async (req, res) => {
     const newInventory = await knex("inventories").insert(req.body);
     res.status(201).json(newInventory);
   } catch (error) {
-    res.status(400).json({
+    res.status(500).json({
       message: `Unable to add inventory item for warehouse with ID ${req.params.id}: ${error}`,
     });
   }
