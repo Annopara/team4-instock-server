@@ -105,7 +105,7 @@ const remove = async (req, res) => {
         .json({ message: `Inventory with ID ${req.params.id} not found` });
     }
 
-    // No Content response
+    
     res.sendStatus(204);
   } catch (error) {
     res.status(500).json({
