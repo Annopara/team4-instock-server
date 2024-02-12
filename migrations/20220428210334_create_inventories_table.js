@@ -5,12 +5,13 @@
 exports.up = function (knex) {
   return knex.schema.createTable('inventories', (table) => {
     table.increments('id').primary();
+    
     table
       .integer('warehouse_id')
       .unsigned()
       .references('warehouses.id')
       .onUpdate('CASCADE')
-      .onDelete('CASCADE');
+      .onDelete('CASCADE'); /* deletes inventory if warehouse is deleted */
     table.string('item_name').notNullable();
     table.string('description').notNullable();
     table.string('category').notNullable();
